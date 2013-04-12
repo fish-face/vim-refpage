@@ -4,6 +4,10 @@
 \usepackage{geometry}
 \usepackage[table]{xcolor}
 \usepackage{fourier}
+\usepackage{tgheros}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+\def\rmfont{\fontfamily{\rmdefault}\selectfont}
 \usepackage{array}
 \usepackage{multirow}
 \geometry{margin=0pt}
@@ -91,7 +95,7 @@
     \cd{\large\tt\r y}{\scriptsize yank/copy}\\
 	\cd{\large\tt\r c}{\scriptsize change}
   \end{tabular}
-  & \scriptsize Any motion can follow an operator. Marks and searches count 
+  & \scriptsize\rmfont Any motion can follow an operator. Marks and searches count 
   as motions too! \inlinecmd{\tt d/foo} will delete from the cursor to the next 
   instance of ``foo''. \inlinecmd{\tt y3fi} will yank from the cursor to the 3rd 
   ``i'' on the line after it. Counts can also come before operators: 
@@ -120,9 +124,9 @@
 \end{tabular}
 
 \vspace{3ex}
-{\footnotesize\tt\begin{tabular}[t]{|c|c|c|c|c|}
+{\footnotesize\tt\begin{tabular}{|c|c|c|c|c|}
 	\hline
-	\rowcolor{cyan!35}\multicolumn5{|l|}{\nf SEARCHING}\\\hline
+	\rowcolor{cyan!35}\multicolumn5{|l|}{\nf\sc Searching}\\\hline
 	\nf Prev & \nf Next 
 		&\nf Forward &\nf Backward & \nf Matches\\\hline
 	\multirow 2*N & \multirow 2*n &
