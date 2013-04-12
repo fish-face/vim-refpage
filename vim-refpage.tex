@@ -1,0 +1,119 @@
+\documentclass[12pt,twocolumn,a4paper]{article}
+
+\usepackage{calc}
+\usepackage{geometry}
+\usepackage[table]{xcolor}
+\usepackage{fourier}
+\geometry{margin=0pt}
+
+\usepackage{etoolbox}
+\usepackage{multido}
+
+\makeatletter
+\def\@@bfil{\leaders \vrule \@height \ht\z@ \@depth \z@ \hfill}% default brace filler
+\def\@bLfil{\@@bfil}% left leader filler
+\def\@bRfil{\@@bfil}% right leader filler
+\def\resetbraceratio{\gdef\@bLfil{\@@bfil}\gdef\@bRfil{\@@bfil}}% reset to default braces
+\def\setbraceratio#1#2{% \setbraceratio{<left>}{<right>}
+  \let\@bLfil\relax% clear left filler
+    \multido{\iA=1+1}{#1}{\gappto\@bLfil{\@@bfil}}% increase left ratio
+      \let\@bRfil\relax% clear right filler
+        \multido{\iA=1+1}{#2}{\gappto\@bRfil{\@@bfil}}% increase right ratio
+	}
+	\def\upbracefill{$\m@th\setbox\z@\hbox{$\braceld$}\bracelu\@bLfil\bracerd\braceld\@bRfil\braceru$}
+	\def\downbracefill{$\m@th\setbox\z@\hbox{$\braceld$}\braceld\@bLfil\braceru\bracelu\@bRfil\bracerd$}
+	\makeatother
+
+\def\w#1{\textcolor{white}{#1}}
+\def\r#1{\textcolor{red}{#1}}
+\def\b#1{\textcolor{blue}{#1}}
+\def\g#1{\textcolor{gray}{#1}}
+
+\newenvironment{coltabular}[2][c]
+	{\rowcolors{1}{cyan!35}{white}\begin{tabular}[#1]{#2}}
+	{\end{tabular}\rowcolors{1}{white}{white}}
+
+\parindent0pt
+
+\def\cd#1#2{\begin{tabular}[t]{@{}c@{}} \parbox{\linewidth}{\centering 
+  #1}\\[-0.5ex] \parbox{\linewidth}{\centering #2}\\ \end{tabular}}
+
+\def\fbbox#1{\mbox{\rlap{\fbox{\phantom{#1}}}{\kern3.5pt{#1}\kern3.5pt}}}
+\def\dl#1{
+	\raisebox{-0.3\baselineskip}
+	[-0.3\baselineskip]
+	[-0.3\baselineskip]{#1}
+}
+
+\def\hl#1{\colorbox{gray}{\kern-3pt{\color{white}#1}\kern-3pt}}
+
+\def\usetextobjectsbox{%
+	\large\tt(\fbbox{\parbox[t]{\widthof{use text-objects}+14pt}{
+		use
+		\fbbox{\parbox[t]{\widthof{text-objects}+7pt}{%
+			\fbbox{\parbox[t]{\widthof{text}}{
+				tex\hl t\\[-0.3\baselineskip]
+				\centering\dl{\colorbox{white}{\b{iw}}}%
+			}}-objects\\[0.1\baselineskip]%
+			\centering\dl{\colorbox{white}{\b{iW}}}%
+		}}\\[0.1\baselineskip]%
+		\dl{\colorbox{white}{\b{i(}}}
+	}}%
+	)
+}
+
+\newlength\helphgt
+\newlength\helpdep
+\settoheight{\helphgt}{\tiny\strut}
+\settodepth{\helpdep}{\tiny\strut}
+\def\taghelp#1#2{%
+	{#1}%
+	\llap{\raisebox{\heightof{#1}+\helpdep}{\tt\tiny\r{:h #2}\kern2ex}}%
+}
+\begin{document}
+
+{\LARGE\tt
+	\taghelp{[\r{operator}]}{operator}%
+	\g{[count]}\taghelp{[\b{motion}]}{motion}
+}
+
+\begin{tabular}[t]{@{}p{0.25\linewidth}
+	@{\hspace{0.05\linewidth}}p{0.35\linewidth}
+	@{\hspace{0.05\linewidth}}p{0.3\linewidth}@{}}
+	\downbracefill &  \omit\span\omit\setbraceratio 53\downbracefill\\
+	\begin{tabular}[t]{@{}c@{}}
+    \cd{\large\tt\r d}{\scriptsize delete/cut}\\
+    \cd{\large\tt\r y}{\scriptsize yank/copy}\\
+	\cd{\large\tt\r c}{\scriptsize change}
+  \end{tabular}
+  & \scriptsize Any motion can follow an operator. Marks and searches count 
+  as motions too! \hl{\tt d/foo} will delete from the cursor to the next 
+  instance of ``foo''. \hl{\tt y3fi} will yank from the cursor to the 3rd 
+  ``i'' on the line after it. Counts can also come before operators: 
+  \hl{\tt 5dd} will delete five lines.    
+  & \scriptsize\begin{coltabular}[t]{cl}
+	\tt w & word \\
+	\tt W & WORD \\
+	\tt s & sentence \\
+	\tt [, ] & [ ] block \\
+	\tt (, ) & ( ) block \\
+	\tt <, > & < > block \\
+	\tt t  & XML/HTML tag \\
+	\tt \{, \} & \{ \} block \\
+	\tt ", ' & quoted string
+  \end{coltabular} \\[-2.5ex]
+  \centering\begin{tabular}[c]{@{}p{0.4\linewidth}
+	@{\hspace{0.1\linewidth}}p{0.4\linewidth}@{}}
+     \cd{\footnotesize\tt\r{gU}}{\tiny make\linebreak uppercase} &
+     \cd{\footnotesize\tt\r Y}{\tiny swap case}\\
+     \cd{\footnotesize\tt\r <}{\tiny shift left} &
+	 \cd{\footnotesize\tt\r =}{\tiny indent}
+ \end{tabular} & 
+ \multicolumn{2}{c}{\raisebox{-2ex}{%
+	 \taghelp{\usetextobjectsbox}{text-objects}
+ }}
+ 
+\end{tabular}
+
+
+\end{document}
