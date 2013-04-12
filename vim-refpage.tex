@@ -45,14 +45,15 @@
 	[-0.3\baselineskip]{#1}
 }
 
-\def\hl#1{\colorbox{gray}{\kern-3pt{\color{white}#1}\kern-3pt}}
+\def\inlinecmd#1{\colorbox{gray}{\kern-3pt{\color{black}#1}\kern-3pt}}
+\def\cursorhl#1{\colorbox{black}{\kern-3pt{\color{white}#1}\kern-3pt}}
 
 \def\usetextobjectsbox{%
 	\large\tt(\fbbox{\parbox[t]{\widthof{use text-objects}+14pt}{
 		use
 		\fbbox{\parbox[t]{\widthof{text-objects}+7pt}{%
 			\fbbox{\parbox[t]{\widthof{text}}{
-				tex\hl t\\[-0.3\baselineskip]
+				tex\cursorhl t\\[-0.3\baselineskip]
 				\centering\dl{\colorbox{white}{\b{iw}}}%
 			}}-objects\\[0.1\baselineskip]%
 			\centering\dl{\colorbox{white}{\b{iW}}}%
@@ -87,10 +88,10 @@
 	\cd{\large\tt\r c}{\scriptsize change}
   \end{tabular}
   & \scriptsize Any motion can follow an operator. Marks and searches count 
-  as motions too! \hl{\tt d/foo} will delete from the cursor to the next 
-  instance of ``foo''. \hl{\tt y3fi} will yank from the cursor to the 3rd 
+  as motions too! \inlinecmd{\tt d/foo} will delete from the cursor to the next 
+  instance of ``foo''. \inlinecmd{\tt y3fi} will yank from the cursor to the 3rd 
   ``i'' on the line after it. Counts can also come before operators: 
-  \hl{\tt 5dd} will delete five lines.    
+  \inlinecmd{\tt 5dd} will delete five lines.    
   & \scriptsize\begin{coltabular}[t]{cl}
 	\tt w & word \\
 	\tt W & WORD \\
