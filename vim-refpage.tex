@@ -4,6 +4,8 @@
 \usepackage{geometry}
 \usepackage[table]{xcolor}
 \usepackage{fourier}
+\usepackage{array}
+\usepackage{multirow}
 \geometry{margin=0pt}
 
 \usepackage{etoolbox}
@@ -45,6 +47,8 @@
 	[-0.3\baselineskip]{#1}
 }
 
+\def\nf{\normalfont}
+
 \def\inlinecmd#1{\colorbox{gray}{\kern-3pt{\color{black}#1}\kern-3pt}}
 \def\cursorhl#1{\colorbox{black}{\kern-3pt{\color{white}#1}\kern-3pt}}
 
@@ -75,7 +79,7 @@
 
 {\LARGE\tt
 	\taghelp{[\r{operator}]}{operator}%
-	\g{[count]}\taghelp{[\b{motion}]}{motion}
+	\g{[count]}\taghelp{[\b{motion}]}{navigation}
 }
 
 \begin{tabular}[t]{@{}p{0.25\linewidth}
@@ -113,8 +117,22 @@
  \multicolumn{2}{c}{\raisebox{-2ex}{%
 	 \taghelp{\usetextobjectsbox}{text-objects}
  }}
- 
 \end{tabular}
 
+\vspace{3ex}
+{\footnotesize\tt\begin{tabular}[t]{|c|c|c|c|c|}
+	\hline
+	\rowcolor{cyan!35}\multicolumn5{|l|}{\nf SEARCHING}\\\hline
+	\nf Prev & \nf Next 
+		&\nf Forward &\nf Backward & \nf Matches\\\hline
+	\multirow 2*N & \multirow 2*n &
+		/\r{foo} & ?\r{foo} & \r{foo}\\
+		&& * & \# & {\nf\scriptsize word under cursor}
+	\\
+	\multirow 2*; & \multirow 2*, &
+		t\r x & T\r x & {\nf\scriptsize upto} \r x\\
+		&& f\r x & F\r x & {\nf\scriptsize find} \r x 
+	\\\hline
+\end{tabular}}
 
 \end{document}
