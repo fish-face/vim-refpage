@@ -1,9 +1,11 @@
-\documentclass[12pt,twocolumn,a4paper]{article}
+\documentclass[twocolumn,a4paper]{article}
 
 \usepackage{tgheros}
 \usepackage{fourier}
 \renewcommand*\familydefault{\sfdefault}
+\renewcommand*\ttdefault{lcmtt}
 \usepackage[T1]{fontenc}
+\usepackage{anyfontsize}
 \usepackage{calc}
 \usepackage{geometry}
 \usepackage[table]{xcolor}
@@ -11,23 +13,34 @@
 \usepackage{multirow}
 \geometry{margin=0pt}
 
+%%%% DEFINE \setbraceratio AND \resetbraceratio MACROS
 \usepackage{etoolbox}
 \usepackage{multido}
 
 \makeatletter
-\def\@@bfil{\leaders \vrule \@height \ht\z@ \@depth \z@ \hfill}% default brace filler
-\def\@bLfil{\@@bfil}% left leader filler
-\def\@bRfil{\@@bfil}% right leader filler
-\def\resetbraceratio{\gdef\@bLfil{\@@bfil}\gdef\@bRfil{\@@bfil}}% reset to default braces
-\def\setbraceratio#1#2{% \setbraceratio{<left>}{<right>}
-  \let\@bLfil\relax% clear left filler
-    \multido{\iA=1+1}{#1}{\gappto\@bLfil{\@@bfil}}% increase left ratio
-      \let\@bRfil\relax% clear right filler
-        \multido{\iA=1+1}{#2}{\gappto\@bRfil{\@@bfil}}% increase right ratio
-	}
-	\def\upbracefill{$\m@th\setbox\z@\hbox{$\braceld$}\bracelu\@bLfil\bracerd\braceld\@bRfil\braceru$}
-	\def\downbracefill{$\m@th\setbox\z@\hbox{$\braceld$}\braceld\@bLfil\braceru\bracelu\@bRfil\bracerd$}
-	\makeatother
+% default brace filler
+\def\@@bfil{\leaders \vrule \@height \ht\z@ \@depth \z@ \hfill}
+% left leader filler
+\def\@bLfil{\@@bfil}
+% right leader filler
+\def\@bRfil{\@@bfil}
+% reset to default braces
+\def\resetbraceratio{\gdef\@bLfil{\@@bfil}\gdef\@bRfil{\@@bfil}}
+% \setbraceratio{<left>}{<right>}
+\def\setbraceratio#1#2{
+	% clear left filler
+	\let\@bLfil\relax
+	% increase left ratio
+	\multido{\iA=1+1}{#1}{\gappto\@bLfil{\@@bfil}}
+	% clear right filler
+	\let\@bRfil\relax
+	% increase right ratio
+	\multido{\iA=1+1}{#2}{\gappto\@bRfil{\@@bfil}}
+}
+\def\upbracefill{$\m@th\setbox\z@\hbox{$\braceld$}\bracelu\@bLfil\bracerd\braceld\@bRfil\braceru$}
+\def\downbracefill{$\m@th\setbox\z@\hbox{$\braceld$}\braceld\@bLfil\braceru\bracelu\@bRfil\bracerd$}
+\makeatother
+%%%%% END OF MACROS
 
 \def\w#1{\textcolor{white}{#1}}
 \def\r#1{\textcolor{red}{#1}}
@@ -40,8 +53,6 @@
 
 \parindent0pt
 
-\def\cd#1#2{\begin{tabular}[t]{@{}c@{}} \parbox{\linewidth}{\centering 
-  #1}\\[-0.5ex] \parbox{\linewidth}{\centering #2}\\ \end{tabular}}
 
 \def\fbbox#1{\mbox{\rlap{\fbox{\phantom{#1}}}{\kern3.5pt{#1}\kern3.5pt}}}
 \def\dl#1{
@@ -54,6 +65,11 @@
 
 \def\inlinecmd#1{\colorbox{gray}{\kern-3pt{\color{black}#1}\kern-3pt}}
 \def\cursorhl#1{\colorbox{black}{\kern-3pt{\color{white}#1}\kern-3pt}}
+\def\titlestyle{\sf\sc\color{black}}
+\def\parstyle{\rm\color{black}}
+\def\cmdstyle{\tt\color{black}}
+\def\egcmdstyle{\tt\color{red}}
+\def\descstyle{\sf\color{black}}
 
 \def\usetextobjectsbox{%
 	\large\tt(\fbbox{\parbox[t]{\widthof{use text-objects}+14pt}{
@@ -70,71 +86,122 @@
 	)
 }
 
+%%% Tag object with help information %%%
+% \taghelp{object}{help-cmd}
 \newlength\helphgt
 \newlength\helpdep
 \settoheight{\helphgt}{\tiny\strut}
 \settodepth{\helpdep}{\tiny\strut}
 \def\taghelp#1#2{%
 	{#1}%
-	\llap{\raisebox{\heightof{#1}+\helpdep}{\tt\tiny\r{:h #2}\kern2ex}}%
+	\llap{\raisebox{\heightof{#1}+\helpdep}{\tiny\egcmdstyle{:h #2}\kern2ex}}%
 }
+%%%%%%%%%%
+
+%%%%% SIZES MACROS
+\newcounter{sizecounter}
+\def\setsize#1{%
+	\ifnum#1<1%
+		\global\tiny%
+	\else\ifcase#1%
+		\relax\or%                                              0
+		\setcounter{sizecounter}{#1}\global\tiny\or%            1
+		\setcounter{sizecounter}{#1}\global\scriptsize\or%      2
+		\setcounter{sizecounter}{#1}\global\footnotesize\or%    3
+		\setcounter{sizecounter}{#1}\global\small\or%           4
+		\setcounter{sizecounter}{#1}\global\normalsize\or%      5
+		\setcounter{sizecounter}{#1}\global\large\or%           6
+		\setcounter{sizecounter}{#1}\global\Large\or%           7
+		\setcounter{sizecounter}{#1}\global\LARGE\or%           8
+		\setcounter{sizecounter}{#1}\global\huge\or%            9
+		\setcounter{sizecounter}{#1}\global\Huge\else%         10
+		\global\Huge%                                         >10
+	\fi\fi%
+}
+\makeatletter
+\def\incsize{\@ifnextchar[{\@incsize}{\@incsize[1]}}
+\def\decsize{\@ifnextchar[{\@decsize}{\@decsize[1]}}
+\def\@incsize[#1]#2{%
+	\addtocounter{sizecounter}{#1}%
+	\setsize{\value{sizecounter}}%
+	#2%
+	\addtocounter{sizecounter}{-#1}%
+	\setsize{\value{sizecounter}}%
+}
+\def\@decsize[#1]#2{%
+	\addtocounter{sizecounter}{-#1}%
+	\setsize{\value{sizecounter}}%
+	#2%
+	\addtocounter{sizecounter}{#1}%
+	\setsize{\value{sizecounter}}%
+}
+\makeatother
+%%%%%%%
+
+\def\desccmd#1#2{\decsize[5]{%
+	\begin{tabular}{@{}c@{}}
+		\incsize[5]{\egcmdstyle #1}\\
+		\descstyle #2
+	\end{tabular}%
+}}
+
 \begin{document}
 
-{\LARGE\tt
+
+{\setsize{8}\tt
 	\taghelp{[\r{operator}]}{operator}%
-	\g{[count]}\taghelp{[\b{motion}]}{navigation}
-}
+	\g{[count]}\taghelp{[\b{motion}]}{navigation}}
 
 \begin{tabular}[t]{@{}p{0.25\linewidth}
 	@{\hspace{0.05\linewidth}}p{0.35\linewidth}
 	@{\hspace{0.05\linewidth}}p{0.3\linewidth}@{}}
-	\downbracefill &  \omit\span\omit\setbraceratio 53\downbracefill\\
-	\begin{tabular}[t]{@{}c@{}}
-    \cd{\large\tt\r d}{\scriptsize delete/cut}\\
-    \cd{\large\tt\r y}{\scriptsize yank/copy}\\
-	\cd{\large\tt\r c}{\scriptsize change}
+	\downbracefill &  \omit\span\omit\setbraceratio 55\downbracefill\\
+	\setsize7\begin{tabular}[t]{@{}p{\linewidth}@{}}
+    \centering\desccmd{d}{delete/cut}\\
+    \centering\desccmd{y}{yank/copy}\\
+	\centering\desccmd{c}{change}\\
   \end{tabular}
-  & \scriptsize\rm Any motion can follow an operator. Marks and searches count 
+  & \setsize2\parstyle Any motion can follow an operator. Marks and searches count 
   as motions too! \inlinecmd{\tt d/foo} will delete from the cursor to the next 
   instance of ``foo''. \inlinecmd{\tt y3fi} will yank from the cursor to the 3rd 
   ``i'' on the line after it. Counts can also come before operators: 
   \inlinecmd{\tt 5dd} will delete five lines.    
-  & \scriptsize\begin{coltabular}[t]{cl}
-	\tt w & word \\
-	\tt W & WORD \\
-	\tt s & sentence \\
-	\tt [, ] & [ ] block \\
-	\tt (, ) & ( ) block \\
-	\tt <, > & < > block \\
-	\tt t  & XML/HTML tag \\
-	\tt \{, \} & \{ \} block \\
-	\tt ", ' & quoted string
-  \end{coltabular} \\[-2.5ex]
-  \centering\begin{tabular}[c]{@{}p{0.4\linewidth}
-	@{\hspace{0.1\linewidth}}p{0.4\linewidth}@{}}
-     \cd{\footnotesize\tt\r{gU}}{\tiny make\linebreak uppercase} &
-     \cd{\footnotesize\tt\r Y}{\tiny swap case}\\
-     \cd{\footnotesize\tt\r <}{\tiny shift left} &
-	 \cd{\footnotesize\tt\r =}{\tiny indent}
+  & \setsize2\begin{coltabular}[t]{>{\cmdstyle}c>{\descstyle}l}
+	w & word \\
+	W & WORD \\
+	s & sentence \\\relax
+	[, ] & [ ] block \\
+	(, ) & ( ) block \\
+	<, > & < > block \\
+	t  & XML/HTML tag \\
+	\{, \} & \{ \} block \\
+	", ' & quoted string
+\end{coltabular} \\[-2ex]
+  \setsize2\centering\begin{tabular}{@{}cc@{}}
+	  \desccmd{gU}{make\\ upper-case} & \desccmd{Y}{swap case}\\[2ex]
+ 	\desccmd{<}{shift left} & \desccmd{=}{indent}\\
  \end{tabular} & 
- \multicolumn{2}{c}{\raisebox{-2ex}{%
+ \multicolumn{2}{c}{\raisebox{-4ex}{%
 	 \taghelp{\usetextobjectsbox}{text-objects}
  }}
 \end{tabular}
 
+
 \vspace{3ex}
-{\footnotesize\tt\begin{tabular}{|c|c|c|c|c|}
+{\setsize{3}\tt\begin{tabular}{|*5{>{\cmdstyle}c|}}
 	\hline
-	\rowcolor{cyan!35}\multicolumn5{|l|}{\nf\sc Searching}\\\hline
-	\nf Prev & \nf Next 
-		&\nf Forward &\nf Backward & \nf Matches\\\hline
+	\rowcolor{cyan!35}\multicolumn5{|l|}{\titlestyle Searching}\\\hline
+	\titlestyle Prev & \titlestyle Next 
+		&\titlestyle Forward &\titlestyle Backward & \titlestyle Matches\\\hline
 	\multirow 2*N & \multirow 2*n &
-		/\r{foo} & ?\r{foo} & \r{foo}\\
-		&& * & \# & {\nf\scriptsize word under cursor}
+		/\egcmdstyle foo & ?\egcmdstyle foo & \egcmdstyle foo\\
+		&& * & \# & \decsize[1]{\descstyle word under cursor}
 	\\
 	\multirow 2*; & \multirow 2*, &
-		t\r x & T\r x & {\nf\scriptsize upto} \r x\\
-		&& f\r x & F\r x & {\nf\scriptsize find} \r x 
+	t\egcmdstyle x & T\egcmdstyle x & \decsize[1]{\descstyle upto}
+			\egcmdstyle x\\
+			&& f\egcmdstyle x & F\egcmdstyle x & \decsize[1]{\descstyle find} 
+			\egcmdstyle x 
 	\\\hline
 \end{tabular}}
 
