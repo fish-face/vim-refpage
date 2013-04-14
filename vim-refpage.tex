@@ -2,8 +2,9 @@
 
 \usepackage{tgheros}
 \usepackage{fourier}
+\usepackage{lmodern}
 \renewcommand*\familydefault{\sfdefault}
-\renewcommand*\ttdefault{lcmtt}
+%\renewcommand*\ttdefault{lcmtt}
 \usepackage[T1]{fontenc}
 \usepackage{anyfontsize}
 \usepackage{calc}
@@ -47,8 +48,18 @@
 \def\b#1{\textcolor{blue}{#1}}
 \def\g#1{\textcolor{gray}{#1}}
 
+% Tabular environment with alternating row colours
+% Params: (as per a normal tabular)
 \newenvironment{coltabular}[2][c]
 	{\rowcolors{1}{cyan!35}{white}\begin{tabular}[#1]{#2}}
+	{\end{tabular}\rowcolors{1}{white}{white}}
+
+% Tabular environment for entering <cmd> <description> pairs.
+% Params:
+% 	1 - optional (default: c) table position
+% 	2 - required - number of columns
+\newenvironment{cmdtable}[2][c]
+	{\rowcolors{1}{gray!50}{white}\arrayrulecolor{white}\begin{tabular}[#1]{*#2{|>{\setsize8\cmdstyle}c>{\descstyle}c|}}}
 	{\end{tabular}\rowcolors{1}{white}{white}}
 
 \parindent0pt
@@ -63,12 +74,13 @@
 
 \def\nf{\normalfont}
 
-\def\inlinecmd#1{\colorbox{gray}{\kern-3pt{\color{black}#1}\kern-3pt}}
+\def\inlinecmd#1{\colorbox{gray!50}{\kern-3pt{\ttfamily\bfseries\color{black}#1}\kern-3pt}}
+%\def\inlinecmd#1{{\color{black}\tt\bfseries#1}}
 \def\cursorhl#1{\colorbox{black}{\kern-3pt{\color{white}#1}\kern-3pt}}
 \def\titlestyle{\sf\sc\color{black}}
 \def\parstyle{\rm\color{black}}
-\def\cmdstyle{\tt\color{black}}
-\def\egcmdstyle{\tt\color{red}}
+\def\cmdstyle{\bfseries\ttfamily\color{black}}
+\def\egcmdstyle{\itshape\ttfamily\color{red}}
 \def\descstyle{\sf\color{black}}
 
 \def\usetextobjectsbox{%
@@ -162,10 +174,10 @@
 	\centering\desccmd{c}{change}\\
   \end{tabular}
   & \setsize2\parstyle Any motion can follow an operator. Marks and searches count 
-  as motions too! \inlinecmd{\tt d/foo} will delete from the cursor to the next 
-  instance of ``foo''. \inlinecmd{\tt y3fi} will yank from the cursor to the 3rd 
+  as motions too! \inlinecmd{d/foo} will delete from the cursor to the next 
+  instance of ``foo''. \inlinecmd{y3fi} will yank from the cursor to the 3rd 
   ``i'' on the line after it. Counts can also come before operators: 
-  \inlinecmd{\tt 5dd} will delete five lines.    
+  \inlinecmd{5dd} will delete five lines.    
   & \setsize2\begin{coltabular}[t]{>{\cmdstyle}c>{\descstyle}l}
 	w & word \\
 	W & WORD \\
@@ -208,4 +220,19 @@
 	\\\hline
 \end{tabular}}
 
+% marks table
+% TODO: work out the best way of putting the descriptions on multiple lines.
+%       can we specify a width, put them in boxes and have everything calculated automatically?
+\vspace{3ex}
+\taghelp{
+	\arrayrulecolor{white}
+	\begin{cmdtable}{3}
+		m\egcmdstyle{m} & create mark {\egcmdstyle m} in file &
+		m\egcmdstyle{M} & set mark {\egcmdstyle M} across files &
+		\textquotesingle[ & jump to first char of just-changed text \\
+		\textquotesingle\egcmdstyle{m} & jump to first char of line containing \egcmdstyle m &
+		\`\egcmdstyle m & jump to exact char of \egcmdstyle m &
+		\textquotesingle\textquotesingle & jump to previous jump point
+	\end{cmdtable}
+}{mark-motions}
 \end{document}
