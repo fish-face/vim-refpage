@@ -15,6 +15,7 @@
 \usepackage{tabulary}
 \usepackage{setspace}
 \geometry{margin=0pt}
+\usepackage{adjustbox}
 
 %%%% DEFINE \setbraceratio AND \resetbraceratio MACROS
 \usepackage{etoolbox}
@@ -54,6 +55,9 @@
 
 % Tabular environment with alternating row colours
 % Params: (as per a normal tabular)
+\newlength\smallex
+\small\setlength{\smallex}{1ex}
+\normalsize
 \newenvironment{coltabular}[2][c]
 	{\rowcolors{1}{cyan!35}{white}\begin{tabular}[#1]{#2}}
 	{\end{tabular}\rowcolors{1}{white}{white}}
@@ -72,7 +76,7 @@
 	{\rowcolors{1}{gray!50}{white}%
 	 \setlength{\extrarowheight}{6pt}%
 	 \arrayrulecolor{white}%
-	 \tabulary{\linewidth}{*#2{|>{\setsize8\cmdstyle}c>{\setsize4\setstretch{0.75}}L|}}}
+	 \tabulary{\linewidth}{*#2{|>{\begin{adjustbox}{raise=\smallex-\height}\setsize8\cmdstyle}c<{\end{adjustbox}}>{\setsize4\setstretch{0.75}}L|}}}
 	{\endtabulary\rowcolors{1}{white}{white}}
 
 \parindent0pt
@@ -245,7 +249,7 @@
 		m\egcmdstyle{M} & set mark {\egcmdstyle M} across files &
 		\textquotesingle[ & jump to first char of just-changed text \\
 		\textquotesingle\egcmdstyle{m} & jump to first char of line containing \egcmdstyle m &
-		\`\egcmdstyle m & jump to exact char of \egcmdstyle m &
+		\`{}\egcmdstyle m & jump to exact char of \egcmdstyle m &
 		\textquotesingle\textquotesingle & jump to previous jump point
 	\end{cmdtable}
 }{mark-motions}
