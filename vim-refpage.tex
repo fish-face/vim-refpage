@@ -12,6 +12,8 @@
 \usepackage[table]{xcolor}
 \usepackage{array}
 \usepackage{multirow}
+\usepackage{tabulary}
+\usepackage{setspace}
 \geometry{margin=0pt}
 
 %%%% DEFINE \setbraceratio AND \resetbraceratio MACROS
@@ -48,6 +50,8 @@
 \def\b#1{\textcolor{blue}{#1}}
 \def\g#1{\textcolor{gray}{#1}}
 
+\setlength{\extrarowheight}{2pt}
+
 % Tabular environment with alternating row colours
 % Params: (as per a normal tabular)
 \newenvironment{coltabular}[2][c]
@@ -58,9 +62,18 @@
 % Params:
 % 	1 - optional (default: c) table position
 % 	2 - required - number of columns
+% TODO: the description columns should have \descstyle set, but this makes the
+%       text jump down a line
+% TODO: why do we need so much extrarowheight in these tables?
+% TODO: the top of the first line of the description should align with the top
+%       of the first line of the command. At the moment the bottoms align.
 \newenvironment{cmdtable}[2][c]
-	{\rowcolors{1}{gray!50}{white}\arrayrulecolor{white}\begin{tabular}[#1]{*#2{|>{\setsize8\cmdstyle}c>{\descstyle}c|}}}
-	{\end{tabular}\rowcolors{1}{white}{white}}
+	%{\rowcolors{1}{gray!50}{white}\arrayrulecolor{white}\begin{tabular}[#1]{*#2{|>{\setsize8\cmdstyle}c>{\descstyle}X|}}}
+	{\rowcolors{1}{gray!50}{white}%
+	 \setlength{\extrarowheight}{6pt}%
+	 \arrayrulecolor{white}%
+	 \tabulary{\linewidth}{*#2{|>{\setsize8\cmdstyle}c>{\setsize4\setstretch{0.75}}L|}}}
+	{\endtabulary\rowcolors{1}{white}{white}}
 
 \parindent0pt
 
@@ -189,6 +202,7 @@
 	\{, \} & \{ \} block \\
 	", ' & quoted string
 \end{coltabular} \\[-2ex]
+%TODO: use tabulary for this
   \setsize2\centering\begin{tabular}{@{}cc@{}}
 	  \desccmd{gU}{make\\ upper-case} & \desccmd{Y}{swap case}\\[2ex]
  	\desccmd{<}{shift left} & \desccmd{=}{indent}\\
