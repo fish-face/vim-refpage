@@ -188,18 +188,21 @@
 
 
 \vspace{3ex}
-{\setsize{3}\tt\begin{tabular}{|*5{>{\cmdstyle}c|}}
+{\setsize{3}\arrayrulecolor{gray!40}\tt\begin{tabular}{|*5{>{\cmdstyle}c|}}
 	\hline
 	\rowcolor{cyan!35}\multicolumn5{|l|}{\titlestyle Searching}\\\hline
 	\titlestyle Prev & \titlestyle Next 
 		&\titlestyle Forward &\titlestyle Backward & \titlestyle Matches\\\hline
 	\multirow 2*N & \multirow 2*n &
 		/\egcmdstyle foo & ?\egcmdstyle foo & \egcmdstyle foo\\
+		\cline{3-5}
 		&& * & \# & \decsize[1]{\descstyle word under cursor}
 	\\
+	\hline
 	\multirow 2*; & \multirow 2*, &
 	t\egcmdstyle x & T\egcmdstyle x & \decsize[1]{\descstyle upto}
 			\egcmdstyle x\\
+			\cline{3-5}
 			&& f\egcmdstyle x & F\egcmdstyle x & \decsize[1]{\descstyle find} 
 			\egcmdstyle x 
 	\\\hline
