@@ -12,7 +12,7 @@
 \usepackage[table]{xcolor}
 \usepackage{array}
 \usepackage{multirow}
-\usepackage{tabulary}
+\usepackage{tabu}
 \usepackage{setspace}
 \geometry{margin=0pt}
 \usepackage{adjustbox}
@@ -74,10 +74,12 @@
 \newenvironment{cmdtable}[2][c]
 	%{\rowcolors{1}{gray!50}{white}\arrayrulecolor{white}\begin{tabular}[#1]{*#2{|>{\setsize8\cmdstyle}c>{\descstyle}X|}}}
 	{\rowcolors{1}{gray!50}{white}%
-	 \setlength{\extrarowheight}{6pt}%
-	 \arrayrulecolor{white}%
-	 \tabulary{\linewidth}{*#2{|>{\begin{adjustbox}{raise=\smallex-\height}\setsize8\cmdstyle}c<{\end{adjustbox}}>{\setsize4\setstretch{0.75}}L|}}}
-	{\endtabulary\rowcolors{1}{white}{white}}
+	 \tabulinesep=4pt%
+	 \taburulecolor{white}%
+	 \begin{tabu} to \linewidth{*#2{|%
+		 >{\begin{adjustbox}{raise=0pt}\setsize8\cmdstyle}c<{\end{adjustbox}}%
+		 >{\setsize4\setstretch{0.75}}X[1,m,l]|}}}
+	 {\end{tabu}\rowcolors{1}{white}{white}}
 
 \parindent0pt
 
