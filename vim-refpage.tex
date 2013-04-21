@@ -15,7 +15,9 @@
 \usepackage{tabu}
 \usepackage{setspace}
 \geometry{margin=0pt}
+\usepackage{calc}
 \usepackage{adjustbox}
+\usepackage{ifthen}
 
 %%%% DEFINE \setbraceratio AND \resetbraceratio MACROS
 \usepackage{etoolbox}
@@ -71,14 +73,21 @@
 % TODO: why do we need so much extrarowheight in these tables?
 % TODO: the top of the first line of the description should align with the top
 %       of the first line of the command. At the moment the bottoms align.
-\newenvironment{cmdtable}[2][c]
+\def\titlebar#1{\colorbox{gray!65}{\parbox{\linewidth}{\MakeUppercase{\bfseries #1}}}}
+\newlength{\cmdtabwidth}
+\newenvironment{cmdtable}[2][]
 	%{\rowcolors{1}{gray!50}{white}\arrayrulecolor{white}\begin{tabular}[#1]{*#2{|>{\setsize8\cmdstyle}c>{\descstyle}X|}}}
-	{\rowcolors{1}{gray!50}{white}%
+	{\ifthenelse{\equal{#1}{}}{}{\titlebar{#1}\par}
+	 \rowcolors{1}{gray!50}{white}%
 	 \tabulinesep=4pt%
 	 \taburulecolor{white}%
-	 \begin{tabu} to \linewidth{*#2{|%
+	 \setlength{\cmdtabwidth}{\linewidth+\tabcolsep}
+	 \begin{tabu} to 
+		 \cmdtabwidth{@{}*#2{|%
 		 >{\begin{adjustbox}{raise=0pt}\setsize8\cmdstyle}c<{\end{adjustbox}}%
-		 >{\setsize4\setstretch{0.75}}X[1,m,l]|}}}
+		 @{\hspace{2\tabcolsep}\hspace{-1pt}}
+		 >{\setsize4\setstretch{0.75}}X[1,m,l]|}@{}}
+	 }
 	 {\end{tabu}\rowcolors{1}{white}{white}}
 
 \parindent0pt
@@ -93,14 +102,17 @@
 
 \def\nf{\normalfont}
 
-\def\inlinecmd#1{\colorbox{gray!50}{\kern-3pt{\ttfamily\bfseries\color{black}#1}\kern-3pt}}
+\def\inlinecmd#1{\colorbox{gray!65}{\kern-3pt{\ttfamily\bfseries\color{black}#1}\kern-3pt}}
+\def\modehl#1{\colorbox{blue!35}{\kern-3pt{\color{red}#1}\kern-3pt}}
 %\def\inlinecmd#1{{\color{black}\tt\bfseries#1}}
 \def\cursorhl#1{\colorbox{black}{\kern-3pt{\color{white}#1}\kern-3pt}}
 \def\titlestyle{\sf\sc\color{black}}
 \def\parstyle{\rm\color{black}}
 \def\cmdstyle{\bfseries\ttfamily\color{black}}
 \def\egcmdstyle{\slshape\ttfamily\color{red}}
+\def\helptagstyle{\ttfamily\color{red}}
 \def\descstyle{\sf\color{black}}
+\def\varstyle{\ttfamily\color{blue}}
 
 \def\usetextobjectsbox{%
 	\large\tt(\fbbox{\parbox[t]{\widthof{use text-objects}+14pt}{
@@ -125,9 +137,12 @@
 \settodepth{\helpdep}{\tiny\strut}
 \def\taghelp#1#2{%
 	{#1}%
-	\llap{\raisebox{\heightof{#1}+\helpdep}{\tiny\egcmdstyle{:h #2}\kern2ex}}%
+	\llap{\raisebox{\heightof{#1}+\helpdep}{\tiny\helptagstyle{:h #2}\kern2ex}}%
 }
 %%%%%%%%%%
+
+\def\infobox#1{\colorbox{gray!35}{\parbox{\linewidth}{\setsize3 #1}}}
+
 
 %%%%% SIZES MACROS
 \newcounter{sizecounter}
@@ -245,7 +260,7 @@
 %       can we specify a width, put them in boxes and have everything calculated automatically?
 \vspace{3ex}
 \taghelp{
-	\arrayrulecolor{white}
+	\parbox{\linewidth}{\arrayrulecolor{white}
 	\begin{cmdtable}{3}
 		m\egcmdstyle{m} & create mark {\egcmdstyle m} in file &
 		m\egcmdstyle{M} & set mark {\egcmdstyle M} across files &
@@ -254,5 +269,56 @@
 		\`{}\egcmdstyle m & jump to exact char of \egcmdstyle m &
 		\textquotesingle\textquotesingle & jump to previous jump point
 	\end{cmdtable}
-}{mark-motions}
+}}{mark-motions}
+
+\bigskip
+\infobox{
+	Pass a directory to the \inlinecmd{:edit} command to open a 
+	directory explorer. Instructions for usage are at the top of the 
+	screen .
+}
+
+\bigskip
+\begin{cmdtable}[Entering insert mode]{3}
+	i & before cursor &
+	a & after cursor &
+	s & substitute character \\
+	I & beginning of line & 
+	A & end of line  &
+	S & substitute line \\
+	O & previous line & 
+	o & next line &
+	C & line from cursor  \\
+\end{cmdtable}
+
+\bigskip
+\begin{cmdtable}[Entering visual (select) mode]{3}
+	v &
+	\tt\setsize2 Use \cursorhl{Visual mode} to select 
+	characters within a line. &
+	V &
+	\tt\setsize2 Use 
+	\cursorhl{Visual Line mode} to select one or more lines. &
+	\^{}v &
+	\tt\setsize2 
+	 Visual \cursorhl{Block mode} 
+	 can \cursorhl{be used to} \cursorhl{select box}es across lines. \\
+\end{cmdtable}
+
+\bigskip
+\begin{cmdtable}[Cool insert mode stuff]{2}
+	\^{}w & delete word before cursor &
+	\^{}u & delete line before cursor\\
+	\^{}r{\egcmdstyle r} & insert the contents of register 
+	{\egcmdstyle r} &
+	\^{}r= & use the expression register (try \inlinecmd{\^{}r=5+10})\\
+	\^{}t & increase line indent by {\varstyle shiftwidth} &
+	\^{}d & decrease line indent by {\varstyle shiftwidth}\\
+	\^{}x\^{}l & line completion &
+	\^{}n & find next completion suggestion according to {\varstyle 
+	complete}\\
+\end{cmdtable}
+
+\bigskip
+
 \end{document}
