@@ -88,7 +88,7 @@
 	{\rowcolors{1}{gray!50}{white}%
 	 \tabulinesep=4pt%
 	 \taburulecolor{white}%
-	 \begin{table}{@{}*#2{|C%
+	 \begin{table}[#1]{@{}*#2{|C%
 		 @{\hspace{2\tabcolsep}\hspace{-1pt}}%
 		 D|}@{}}%
 	 }
@@ -240,29 +240,31 @@
 \end{tabular}
 
 \bigskip
-\begin{table}[Searching]{|c|c|X[1,m,L]|c|c|}\hline
-	\rowcolor{gray!50}{\titlestyle Forward} &
+{\taburulecolor{white}\rowcolors{1}{gray!50}{white}
+\begin{table}[Searching]{|c||c||X[1,m,L]||c||c|}%\hline
+	{\titlestyle Forward} &
 	{\titlestyle Backward} &
 	{\hfill\titlestyle Matches\hfill} &
 	{\titlestyle Next}&
-	{\titlestyle Previous}\\\hline
+	{\titlestyle Previous}\\%\hline
 	\cmdstyle /{\egcmdstyle foo} &
 	\cmdstyle ?{\egcmdstyle foo} &
 	matches \egcmdstyle foo &
-	\multirow{2}{*}{\cmdstyle n} & \multirow{2}{*}{\cmdstyle 
-	N}\\\cline{1-3}
-	\cellcolor{gray!50}{\cmdstyle *} & 
-	\cellcolor{gray!50}{\cmdstyle \#} & 
-	\cellcolor{gray!50}{word under cursor}
-	& &\\\hline
+	\cmdstyle n & \cmdstyle N\\%\cline{1-3}
+	{\cmdstyle *} & 
+	{\cmdstyle \#} & 
+	{word under cursor} &
+	\cmdstyle n & \cmdstyle N\\%\cline{1-3}
 	\cmdstyle t{\egcmdstyle x} &
 	\cmdstyle T{\egcmdstyle x} &
 	upto {\egcmdstyle x} & 
-	\multirow{2}{*}{\cmdstyle ;} & \multirow{2}{*}{\cmdstyle ,}\\\cline{1-3}
-	\cellcolor{gray!50}{\cmdstyle f{\egcmdstyle x}} &
-	\cellcolor{gray!50}{\cmdstyle F{\egcmdstyle x}} &
-	\cellcolor{gray!50}{find {\egcmdstyle x}} &&\\\hline
-\end{table}
+	\cmdstyle ; & \cmdstyle ,\\%\cline{1-3}
+	{\cmdstyle f{\egcmdstyle x}} &
+	{\cmdstyle F{\egcmdstyle x}} &
+	{find {\egcmdstyle x}} &
+	\cmdstyle ; & \cmdstyle ,\\%\cline{1-3}
+\end{table}}
+
 
 %\vspace{3ex}
 %{\setsize{3}\arrayrulecolor{gray!40}\tt\begin{tabular}{|*5{>{\cmdstyle}c|}}
@@ -328,8 +330,8 @@
 	v &
 	\tt\setsize2 Use \cursorhl{Visual mode} to select 
 	characters within a line. &
-	V &
-	\tt\setsize2 Use 
+	\cellcolor{white} V &
+	\cellcolor{white}\tt\setsize2 Use 
 	\cursorhl{Visual Line mode} to select one or more lines. &
 	\^{}v &
 	\tt\setsize2 
@@ -338,9 +340,10 @@
 \end{cmdtable}
 
 \begin{cmdtable}{4}
-	o & \taghelp{\parbox{\linewidth}{switch cursor to start/end}}{v\_o} &
+		\cellcolor{white}o & 
+		\cellcolor{white} \taghelp{\parbox{\linewidth}{switch cursor to start/end}}{v\_o} &
 	gv & \taghelp{\parbox{\linewidth}{reselect previous area}}{gv} &
-	I & \taghelp{\parbox{\linewidth}{prepend to each visual block 
+	\cellcolor{white}I & \cellcolor{white}\taghelp{\parbox{\linewidth}{prepend to each visual block 
 	line}}{v\_b\_I} &
 	\textquotesingle< & \taghelp{\parbox{\linewidth}{jump to start of prior 
 	area}}{\textquotesingle<}\\
